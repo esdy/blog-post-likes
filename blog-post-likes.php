@@ -118,18 +118,22 @@ function updateLikes($post_data){
 	if(empty($isLiked)){
 		$column = ($post_data['value'] == 1)?'likes':'dislikes';
 		$insert = $wpdb->insert("$table_name",['post_id' =>$post_data['post_id'],"$column" => 1,'user_mac'=>$user_mac]);
-		
-		echo json_encode(['likes'=> fetchLikes($post_data['post_id'])->likes, 
-		'dislikes'=>fetchLikes($post_data['post_id'])->dislikes,'liked'=>$post_data['value']]);
+		$new_likes = (!empty(fetchLikes($post_data['post_id'])->likes))?fetchLikes($post_data['post_id'])->likes:0;
+		$new_dislikes = (!empty(fetchLikes($post_data['post_id'])->dislikes))?fetchLikes($post_data['post_id'])->dislikes:0;
+		$liked = (empty($post_data['value']))?0:$post_data['value'];
+		echo json_encode(['likes'=> $new_likes, 
+		'dislikes'=>$new_dislikes,'liked'=>$liked]);
 		die();
 	}else if(!empty($isLiked)){
 		$column = ($post_data['value'] == 1)?'likes':'dislikes';
 		$likes = ($post_data['value'] == 1)?1:0;
 		$dislikes = ($post_data['value'] == 0)?1:0;
 		$update = $wpdb->update("$table_name",['likes'=>$likes,'dislikes'=>$dislikes],['post_id' =>$post_data['post_id'],'user_mac'=>$user_mac]);
-		
-		echo json_encode(['likes'=> fetchLikes($post_data['post_id'])->likes, 
-		'dislikes'=>fetchLikes($post_data['post_id'])->dislikes,'liked'=>$post_data['value']]);
+		$new_likes = (!empty(fetchLikes($post_data['post_id'])->likes))?fetchLikes($post_data['post_id'])->likes:0;
+		$new_dislikes = (!empty(fetchLikes($post_data['post_id'])->dislikes))?fetchLikes($post_data['post_id'])->dislikes:0;		
+		$liked = (empty($post_data['value']))?0:$post_data['value'];
+		echo json_encode(['likes'=> $new_likes, 
+		'dislikes'=>$new_dislikes,'liked'=>$liked]);
 		die();		
 	}
 }
