@@ -16,7 +16,7 @@
 		$.post({
 			type: 'POST',
 			data: {
-					// action: 'update_likes',
+					action: 'ewbpl_update_likes',
 					value: value,
 					post_id: post_id
 			},
@@ -35,20 +35,3 @@
 		})		
 	}
  });
- 
- /*
- jQuery(document).ready(function($) {
-	 $('#like-post').click(function(){
-
-    var data = {
-        action: 'update_likes',
-        whatever: 1234
-    };
-
-    jQuery.post(my_ajax_object.ajaxurl, data, function(response) {
-        // alert('Got this from the server: ' + response);
-		console.log(response);
-    });
-	});
-});
-*/
