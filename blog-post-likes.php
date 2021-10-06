@@ -21,14 +21,15 @@ function ewbpl_blog_post_likes($content)
 {
 	$post_id = get_post()->ID;
 	$user_mac = ewbpl_user_mac_address();
-	$isLiked = ewbpl_podt_is_liked($post_id, $user_mac)[0];
+	$isLiked = ewbpl_post_is_liked($post_id, $user_mac)[0];
 	$liked_style = (isset($isLiked->likes) && $isLiked->likes == 1)?'style="color:red"':""; 
 	$disliked_style = (isset($isLiked->dislikes) && $isLiked->dislikes == 1)?'style="color:red"':""; 
 	$likes = (ewbpl_fetch_likes($post_id)->likes == '')?0:ewbpl_fetch_likes($post_id)->likes;
 	$dislikes = (ewbpl_fetch_likes($post_id)->dislikes == '')?0:ewbpl_fetch_likes($post_id)->dislikes;
-	$like_icons = '<p><br><i class="icofont-thumbs-up liked-post" id="like-post" value="'.$post_id.'" ' .$liked_style .'></i> <span id="post-likes">' .$likes.'  </span> <i class="icofont-thumbs-down disliked-post" id="dislike-post" value="'.$post_id.'" ' .$disliked_style .'></i><span id="post-dislikes"> ' . $dislikes.'</span></p>';
+	$like_icons_top = '<p><br><i class="icofont-thumbs-up liked-post" id="like-post" value="'.$post_id.'" ' .$liked_style .'></i> <span id="post-likes">  ' . esc_attr($likes).'   </span> <i class="icofont-thumbs-down disliked-post" id="dislike-post" value="'.$post_id.'" ' .$disliked_style .'></i><span id="post-dislikes">  ' . esc_attr($dislikes) .'</span></p>';
+	$like_icons_bottom = '<p><br><i class="icofont-thumbs-up liked-post-bottom" id="like-post-bottom" value="'.$post_id.'" ' .$liked_style .'></i> <span id="post-likes-bottom">  ' .esc_attr($likes) .'   </span> <i class="icofont-thumbs-down disliked-post-bottom" id="dislike-post-bottom" value="'.$post_id.'" ' .$disliked_style .'></i><span id="post-dislikes-bottom">  ' . esc_attr($dislikes) .'</span></p>';
 	if(is_single()){
-		return $like_icons . $content;
+		return $like_icons_top . $content . $like_icons_bottom;
 	}
 	
 	return $content;
@@ -58,7 +59,7 @@ function ewbpl_fetch_likes($post_id)
 }
 
 //check if already liked
-function ewbpl_podt_is_liked($post_id, $user_mac)
+function ewbpl_post_is_liked($post_id, $user_mac)
 {
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'post_likes';
@@ -91,7 +92,10 @@ function ewbpl_likes_create_table(){
 	 dbDelta( $sql );
 }
 
-register_activation_hook(ABSPATH . 'wp-content/plugins/blog-post-likes/blog-post-likes.php','ew_bpl_likes_create_table' );
+register_activation_hook(
+					plugins_url('blog-post-likes/blog-post-likes.php',__FILE__),
+					'ew_bpl_likes_create_table'
+					);
 
 //add js and css files
 function ewbpl_plugin_enqueue_scripts() {
@@ -118,7 +122,7 @@ function ewbpl_update_likes($post_data){
 	global $wpdb;
 	$table_name = $wpdb->prefix . 'post_likes';
 	$user_mac = ewbpl_user_mac_address();
-	$isLiked = ewbpl_podt_is_liked($post_data['post_id'],$user_mac);
+	$isLiked = ewbpl_post_is_liked($post_data['post_id'],$user_mac);
 	if(empty($isLiked)){
 		$column = ($post_data['value'] == 1)?'likes':'dislikes';
 		$insert = $wpdb->insert("$table_name",['post_id' =>$post_data['post_id'],"$column" => 1,'user_mac'=>$user_mac]);
@@ -155,7 +159,7 @@ function ewbpl_post_custom_column_likes_admin($column_name, $id){
      
     if($column_name === 'post_likes'){
 		$likes = (ewbpl_fetch_likes(get_the_ID())->likes == '')?0:ewbpl_fetch_likes(get_the_ID())->likes;
-        echo $likes;
+        echo esc_attr($likes);
     }
 }
 //Init the views fucntion
@@ -173,7 +177,7 @@ function ewbpl_post_custom_column_dislikes_admin($column_name, $id){
      
     if($column_name === 'post_dislikes'){
 		$dislikes = (ewbpl_fetch_likes(get_the_ID())->dislikes == '')?0:ewbpl_fetch_likes(get_the_ID())->dislikes;
-        echo $dislikes;
+        echo esc_attr($dislikes);
     }
 }
 //Init the views fucntion
