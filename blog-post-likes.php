@@ -2,11 +2,7 @@
 /**
  * Plugin Name: Blog Post Likes
  * Plugin URI: https://dwanjala.com
- * Description: Finally, a plugin to track likes and dislikes of posts without necessarily 
- requiring login! The plugin used the devices MAC address to identify the user reading a 
- particular post. Unlike IP Addresses which tend to change from time to time, the MAC 
- address is constant making it possible to identify post’s and device’s relationship 
- and user interaction with the thumbs up and thumbs down icons.
+ * Description: Finally, a plugin to track likes and dislikes of posts without necessarily requiring login! The plugin used the devices MAC address to identify the user reading a particular post. Unlike IP Addresses which tend to change from time to time, the MAC address is constant making it possible to identify post’s and device’s relationship and user interaction with the thumbs up and thumbs down icons.
  * Version: 1.0.0
  * Author: Esdy Wanjala
  * Author URI: https://www.dwanjala.com
@@ -92,10 +88,7 @@ function ewbpl_likes_create_table(){
 	 dbDelta( $sql );
 }
 
-register_activation_hook(
-					plugins_url('blog-post-likes/blog-post-likes.php',__FILE__),
-					'ew_bpl_likes_create_table'
-					);
+register_activation_hook(__FILE__,'ewbpl_likes_create_table');
 
 //add js and css files
 function ewbpl_plugin_enqueue_scripts() {
