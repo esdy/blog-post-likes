@@ -122,8 +122,8 @@ function ewbpl_update_likes($post_data){
 		$new_likes = (!empty(ewbpl_fetch_likes($post_data['post_id'])->likes))?ewbpl_fetch_likes($post_data['post_id'])->likes:0;
 		$new_dislikes = (!empty(ewbpl_fetch_likes($post_data['post_id'])->dislikes))?ewbpl_fetch_likes($post_data['post_id'])->dislikes:0;
 		$liked = (empty($post_data['value']))?0:$post_data['value'];
-		echo json_encode(['likes'=> $new_likes, 
-		'dislikes'=>$new_dislikes,'liked'=>$liked]);
+		echo json_encode(['likes'=> esc_attr($new_likes), 
+		'dislikes'=>esc_attr($new_dislikes),'liked'=>esc_attr($liked)]);
 		die();
 	}else if(!empty($isLiked)){
 		$column = ($post_data['value'] == 1)?'likes':'dislikes';
@@ -133,8 +133,8 @@ function ewbpl_update_likes($post_data){
 		$new_likes = (!empty(ewbpl_fetch_likes($post_data['post_id'])->likes))?ewbpl_fetch_likes($post_data['post_id'])->likes:0;
 		$new_dislikes = (!empty(ewbpl_fetch_likes($post_data['post_id'])->dislikes))?ewbpl_fetch_likes($post_data['post_id'])->dislikes:0;		
 		$liked = (empty($post_data['value']))?0:$post_data['value'];
-		echo json_encode(['likes'=> $new_likes, 
-		'dislikes'=>$new_dislikes,'liked'=>$liked]);
+		echo json_encode(['likes'=> esc_attr($new_likes), 
+		'dislikes'=>esc_attr($new_dislikes),'liked'=>esc_attr($liked)]);
 		die();		
 	}
 }
